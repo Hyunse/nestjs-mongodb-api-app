@@ -2,9 +2,11 @@ import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { BookmarkModule } from './bookmark/bookmark.module';
 import { AuthModule } from './auth/auth.module';
-import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
+import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
+import { AppConfigModule } from './config/app-config.module';
+import { AppConfigService } from './config/app-config.service';
 
 @Module({
   imports: [
@@ -12,12 +14,11 @@ import configuration from './config/configuration';
       load: [configuration],
     }),
     MongooseModule.forRootAsync({
-      inject: [ConfigService],
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => {
+      imports: [AppConfigModule],
+      inject: [AppConfigService],
+      useFactory: (appConfigServcie: AppConfigService): MongooseModuleOptions => {
         return {
-          uri: `mongodb://${configService.get('database.host')}:${configService.get('database.port')}`,
-          dbname: 'nestjs-test'
+          uri: appConfigServcie.connectionString
         }
       },
     }),
