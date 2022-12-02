@@ -1,7 +1,7 @@
 {
   "name": "nestjs-mongodb-api-app",
   "version": "0.0.1",
-  "description": "Nestjs with MongoDB API application",
+  "description": "Nestjs API application with MongoDB ",
   "author": "Hyunse Kim",
   "private": true,
   "license": "UNLICENSED",

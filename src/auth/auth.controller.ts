@@ -1,7 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { UserDocument } from 'src/user/schemas/user.schema';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 
@@ -16,7 +13,7 @@ export class AuthController {
   }
 
   @Post('signin')
-  signin() {
-    return this.authService.signin();
+  signin(@Body() authDto: AuthDto) {
+    return this.authService.signin(authDto);
   }
 }
