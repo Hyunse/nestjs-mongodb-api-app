@@ -26,7 +26,9 @@ export class AuthService {
     // Generate the password hash
     const hashedPassword = await argon.hash(password);
     // Save the new user in the db
-    await this.userModel.create({ email, password: hashedPassword });
+    const newUser = await this.userModel.create({ email, password: hashedPassword });
+
+
 
     return {
       ok: true,
@@ -52,9 +54,17 @@ export class AuthService {
       throw new HttpException('Wrong email or password', HttpStatus.FORBIDDEN);
     }
 
+
     return {
       ok: true,
       message: 'logined'
     };
+  }
+  
+  logout() {
+    return {
+      ok: true,
+      message: 'Successfully logout'
+    }
   }
 }

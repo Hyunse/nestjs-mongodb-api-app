@@ -1,31 +1,34 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { Bookmark, BookmarkDocument } from 'src/bookmark/schemas/bookmark.schema';
 
 export type UserDocument = User & Document;
 
 @Schema()
 export class User {
   @Prop({
-    type: String
+    unique: true 
   })
   email: string;
 
-  @Prop({
-    type: String
-  })
+  @Prop()
   password: string;
 
   @Prop({
-    type: String,
     isRequired: false,
   })
   firstName: string;
 
   @Prop({
-    type: String,
     isRequired: false,
   })
   lastName: string;
+
+  @Prop({
+    type: [Types.ObjectId], ref: 'Bookmark'
+
+  })
+  bookmarks: BookmarkDocument[]
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
