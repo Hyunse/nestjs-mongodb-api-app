@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { Bookmark, BookmarkDocument } from 'src/bookmark/schemas/bookmark.schema';
+import { BookmarkDocument } from 'src/bookmark/schemas/bookmark.schema';
 
 export type UserDocument = User & Document;
 

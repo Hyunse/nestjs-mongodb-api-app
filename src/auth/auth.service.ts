@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { AuthDto } from './dto/auth.dto';
+import { LoginAuthDto } from './dto/login-auth.dto';
 import * as argon from 'argon2';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserDocument } from 'src/user/schemas/user.schema';
+import { RegisterAuthDto } from './dto/register-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,10 +12,8 @@ export class AuthService {
     @InjectModel('User') private readonly userModel: Model<UserDocument>,
   ) {}
 
-  async signup(authDto: AuthDto) {
+  async signup({ email, password, firstName, lastName}: RegisterAuthDto) {
     // Variables
-    const email = authDto.email;
-    const password = authDto.password;
 
     // Check User
     const existingUser = await this.userModel.findOne({ email });
@@ -26,22 +25,30 @@ export class AuthService {
     // Generate the password hash
     const hashedPassword = await argon.hash(password);
     // Save the new user in the db
-    const newUser = await this.userModel.create({ email, password: hashedPassword });
-
-
+    await this.userModel.create({
+      email,
+      password: hashedPassword,
+      firstName,
+      lastName
+    });
 
     return {
       ok: true,
-      message: 'Created user'
+      message: 'Created user',
+      user: {
+        email,
+        firstName,
+        lastName
+      }
     };
   }
 
-  async signin(authDto: AuthDto) {
+  async validateUser(loginAuthDto: LoginAuthDto) {
     // Variables
-    const email = authDto.email;
-    const password = authDto.password;
-
-    const loginUser = await this.userModel.findOne({ email });
+    const email = loginAuthDto.email;
+    const password = loginAuthDto.password;
+    const loginUser = await this.userModel
+      .findOne({ email });
 
     if (!loginUser) {
       throw new HttpException('Wrong email or password', HttpStatus.FORBIDDEN);
@@ -54,17 +61,22 @@ export class AuthService {
       throw new HttpException('Wrong email or password', HttpStatus.FORBIDDEN);
     }
 
-
     return {
       ok: true,
-      message: 'logined'
+      info: {
+        email: loginUser.email,
+        lastName: loginUser.lastName,
+        firstName: loginUser.firstName,
+        bookmarks: loginUser.bookmarks
+      }
     };
   }
-  
-  logout() {
+
+  logout(req: any) {
+    req.session.destroy();
     return {
       ok: true,
-      message: 'Successfully logout'
-    }
+      message: 'Successfully logout',
+    };
   }
 }

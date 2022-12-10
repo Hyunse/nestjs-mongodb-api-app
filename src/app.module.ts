@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { BookmarkModule } from './bookmark/bookmark.module';
 import { AuthModule } from './auth/auth.module';
@@ -9,32 +9,23 @@ import { AppConfigModule } from './config/app-config.module';
 import { AppConfigService } from './config/app-config.service';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { RedisModule } from './redis/redis.module';
+import * as session from 'express-session';
+import * as connectRedis from 'connect-redis';
+import { RedisService } from './redis/redis.service';
+import {
+  session as passportSession,
+  initialize as passportInitialize,
+} from 'passport';
 
 @Module({
   imports: [
+    RedisModule,
     /**
-     * Config Module 
+     * Config Module
      */
     ConfigModule.forRoot({
       load: [configuration],
-    }),
-    /**
-     * Redis Module
-     */
-    RedisModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        return {
-          readyLog: true,
-          errorLog: true,
-          config: {
-            host: configService.get('redis.host'),
-            port: configService.get('redis.port')
-          }
-        }
-      }
     }),
     /**
      * Mongoose Module
