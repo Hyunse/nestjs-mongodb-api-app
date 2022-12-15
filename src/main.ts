@@ -1,11 +1,15 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import * as createRedisStore from 'connect-redis';
 import * as session from 'express-session';
 import * as passport from 'passport';
+import { createClient } from 'redis';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
   const port = process.env.PORT || 3333;
   // Global Pipes
   app.useGlobalPipes(
@@ -15,8 +19,19 @@ async function bootstrap() {
   );
 
   // Session
+  const RedisStore = createRedisStore(session);
+  const redisHost: string = configService.get('redis.host');
+  const redisPort: number = configService.get('redis.port');
+  const redisClient = createClient({
+    socket: {
+      host: redisHost,
+      port: redisPort
+    }
+  });
+
   app.use(
     session({
+      store: new RedisStore({ client: redisClient }),
       secret: 'my-nestjs-session-secret',
       resave: false,
       saveUninitialized: false

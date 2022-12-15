@@ -73,7 +73,8 @@ export class AuthService {
   }
 
   logout(req: any) {
-    req.session.destroy();
+    console.log(req.session);
+    // req.session.destroy();
     return {
       ok: true,
       message: 'Successfully logout',

@@ -9,18 +9,11 @@ import { AppConfigModule } from './config/app-config.module';
 import { AppConfigService } from './config/app-config.service';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { RedisModule } from './redis/redis.module';
-import * as session from 'express-session';
-import * as connectRedis from 'connect-redis';
-import { RedisService } from './redis/redis.service';
-import {
-  session as passportSession,
-  initialize as passportInitialize,
-} from 'passport';
+// import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
-    RedisModule,
+    // RedisModule,
     /**
      * Config Module
      */
