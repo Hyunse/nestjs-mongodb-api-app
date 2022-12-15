@@ -26,9 +26,13 @@ async function bootstrap() {
     socket: {
       host: redisHost,
       port: redisPort
-    }
+    },
+    legacyMode: true
   });
 
+  redisClient.on('connect', () => {
+    console.log('redis connected')
+  })
   app.use(
     session({
       store: new RedisStore({ client: redisClient }),
@@ -39,6 +43,12 @@ async function bootstrap() {
   )
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(function (req, res, next) {
+    if (!req.session) {
+      return next(new Error("oh no")) // handle error
+    }
+    next() // otherwise continue
+  })
 
   await app.listen(port);
 }

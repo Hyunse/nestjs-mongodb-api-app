@@ -12,7 +12,7 @@ export class AuthService {
     @InjectModel('User') private readonly userModel: Model<UserDocument>,
   ) {}
 
-  async signup({ email, password, firstName, lastName}: RegisterAuthDto) {
+  async signup({ email, password, firstName, lastName }: RegisterAuthDto) {
     // Variables
 
     // Check User
@@ -29,7 +29,7 @@ export class AuthService {
       email,
       password: hashedPassword,
       firstName,
-      lastName
+      lastName,
     });
 
     return {
@@ -38,8 +38,8 @@ export class AuthService {
       user: {
         email,
         firstName,
-        lastName
-      }
+        lastName,
+      },
     };
   }
 
@@ -47,8 +47,7 @@ export class AuthService {
     // Variables
     const email = loginAuthDto.email;
     const password = loginAuthDto.password;
-    const loginUser = await this.userModel
-      .findOne({ email });
+    const loginUser = await this.userModel.findOne({ email });
 
     if (!loginUser) {
       throw new HttpException('Wrong email or password', HttpStatus.FORBIDDEN);
@@ -62,13 +61,10 @@ export class AuthService {
     }
 
     return {
-      ok: true,
-      info: {
-        email: loginUser.email,
-        lastName: loginUser.lastName,
-        firstName: loginUser.firstName,
-        bookmarks: loginUser.bookmarks
-      }
+      _id: loginUser._id,
+      email: loginUser.email,
+      firstName: loginUser.firstName,
+      lastName: loginUser.lastName,
     };
   }
 

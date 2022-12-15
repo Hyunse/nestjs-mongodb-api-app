@@ -15,6 +15,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('signin')
   signin(@Req() req) {
+    console.log("req session", req.session);
     return {
       user: req.user
     }

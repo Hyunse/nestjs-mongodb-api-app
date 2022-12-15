@@ -10,10 +10,10 @@ export class AuthSerializer extends PassportSerializer {
     super();
   }
   serializeUser(
-    user: UserDocument,
+    user: any,
     done: (err: Error, user: { id: any }) => void,
   ) {
-    done(null, { id: user._id });
+    done(null, { id: user.email });
   }
 
   deserializeUser(
@@ -34,7 +34,7 @@ export class AuthSerializer extends PassportSerializer {
       >,
     ) => void,
   ) {
-    const user = this.userService.findById(payload.id);
+    const user = this.userService.findById(payload.id).select("-password");
     done(null, user);
   }
 }
