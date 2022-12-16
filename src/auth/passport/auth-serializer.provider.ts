@@ -17,17 +17,16 @@ export class AuthSerializer extends PassportSerializer {
     done(null, { id: user._id });
   }
 
-  deserializeUser(
+  async deserializeUser(
     payload: { id: string },
     done: (
       err: Error,
       user: any
     ) => void,
   ) {
-    const user = this.userService.findById(payload.id);
+    const user = await this.userService.findById(payload.id);
 
     if(!user) done(new HttpException('FORBIDDEN', HttpStatus.FORBIDDEN), null);
-
     // Set request.user
     done(null, user);
   }
