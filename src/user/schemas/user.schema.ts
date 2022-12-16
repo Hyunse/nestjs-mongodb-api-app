@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { BookmarkDocument } from 'src/bookmark/schemas/bookmark.schema';
 
-export type UserDocument = User & Document;
+export type UserType = User & Document;
 
 @Schema()
 export class User {

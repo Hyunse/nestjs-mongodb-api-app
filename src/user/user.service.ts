@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
-import { UserDocument } from "./schemas/user.schema";
+import mongoose, { Model } from "mongoose";
+import { UserType } from "./schemas/user.schema";
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private readonly userModel: Model<UserDocument>) {}
-
+  constructor(@InjectModel('User') private readonly userModel: Model<UserType>) {}
   findById(id: string) {
-    return this.userModel.findById(id);
+    if(!mongoose.Types.ObjectId.isValid(id)) return null;
+    return this.userModel.findOne({ _id: id }).select('-password');
   }
 }

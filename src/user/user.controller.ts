@@ -1,5 +1,7 @@
 import { Controller, Get, Req, UseGuards } from "@nestjs/common";
-import { AuthenticatedGuard } from "src/guard/authenticated.guard";
+import { AuthenticatedGuard } from "src/auth/guard/authenticated.guard";
+import { GetUser } from "src/common/decorator";
+import { User } from "./schemas/user.schema";
 
 @Controller('user')
 export class UserController {
@@ -7,7 +9,7 @@ export class UserController {
 
   @UseGuards(AuthenticatedGuard)
   @Get('/get')
-  getUser(@Req() req) {
-    return req.user;
+  getUser(@GetUser() user) {
+    return user;
   }
 }

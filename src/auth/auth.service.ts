@@ -3,13 +3,13 @@ import { LoginAuthDto } from './dto/login-auth.dto';
 import * as argon from 'argon2';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UserDocument } from 'src/user/schemas/user.schema';
+import { UserType } from 'src/user/schemas/user.schema';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel('User') private readonly userModel: Model<UserDocument>,
+    @InjectModel('User') private readonly userModel: Model<UserType>,
   ) {}
 
   async signup({ email, password, firstName, lastName }: RegisterAuthDto) {
@@ -69,7 +69,6 @@ export class AuthService {
   }
 
   logout(req: any) {
-    console.log(req.session);
     // req.session.destroy();
     return {
       ok: true,

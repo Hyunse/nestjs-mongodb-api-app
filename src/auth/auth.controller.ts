@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { LocalAuthGuard } from 'src/guard/local-auth.guard';
+import { LocalAuthGuard } from 'src/auth/guard/local-auth.guard';
 import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 
@@ -15,7 +15,6 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('signin')
   signin(@Req() req) {
-    console.log("req session", req.session);
     return {
       user: req.user
     }
